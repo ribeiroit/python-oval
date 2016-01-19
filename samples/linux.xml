@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oval_definitions xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oval="http://oval.mitre.org/XMLSchema/oval-common-5" xmlns:oval-def="http://oval.mitre.org/XMLSchema/oval-definitions-5" xmlns:unix-def="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix" xsi:schemaLocation="http://oval.mitre.org/XMLSchema/oval-definitions-5 oval-definitions-schema.xsd http://oval.mitre.org/XMLSchema/oval-common-5 oval-common-schema.xsd http://oval.mitre.org/XMLSchema/oval-definitions-5#unix unix-definitions-schema.xsd">
+  <generator>
+    <oval:product_name>eSCAPe</oval:product_name>
+    <oval:product_version>1.2.2</oval:product_version>
+    <oval:schema_version>5.3</oval:schema_version>
+    <oval:timestamp>2016-01-06T12:21:05</oval:timestamp>
+  </generator>
+  <!--generated.oval.base.identifier=test1-->
+  <definitions>
+    <definition id="oval:test1:def:1" version="1" class="vulnerability">
+      <metadata>
+        <title>Checklist Linux</title>
+        <description>File content that checks /etc for file named /ssh/sshd_config</description>
+      </metadata>
+      <criteria operator="AND">
+        <criterion comment="File test of File path /etc, file name /ssh/sshd_config" test_ref="oval:test1:tst:1" />
+      </criteria>
+    </definition>
+  </definitions>
+  <tests>
+    <file_test xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix" id="oval:test1:tst:1" version="1" check="all" comment="File test of File path /etc, file name /ssh/sshd_config">
+      <object object_ref="oval:test1:obj:1" />
+      <state state_ref="oval:test1:ste:1" />
+    </file_test>
+  </tests>
+  <objects>
+    <file_object xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix" id="oval:test1:obj:1" version="1" comment="File path /etc, file name /ssh/sshd_config">
+      <path datatype="string">/etc</path>
+      <filename datatype="string">/ssh/sshd_config</filename>
+    </file_object>
+  </objects>
+  <states>
+    <file_state xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#unix" id="oval:test1:ste:1" version="1" comment="Check file for type equals UseDNS ">
+      <type datatype="string" operation="equals">UseDNS</type>
+    </file_state>
+  </states>
+</oval_definitions>

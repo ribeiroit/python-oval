@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<oval_definitions xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:oval="http://oval.mitre.org/XMLSchema/oval-common-5" xmlns:oval-def="http://oval.mitre.org/XMLSchema/oval-definitions-5" xmlns:ios-def="http://oval.mitre.org/XMLSchema/oval-definitions-5#ios" xsi:schemaLocation="http://oval.mitre.org/XMLSchema/oval-definitions-5 oval-definitions-schema.xsd http://oval.mitre.org/XMLSchema/oval-definitions-5#ios ios-definitions-schema.xsd http://oval.mitre.org/XMLSchema/oval-common-5 oval-common-schema.xsd">
+  <generator>
+    <oval:product_name>Enhanced SCAP Editor</oval:product_name>
+    <oval:product_version>0.0.11</oval:product_version>
+    <oval:schema_version>5.3</oval:schema_version>
+    <oval:timestamp>2016-01-11T04:20:04</oval:timestamp>
+  </generator>
+  <!--generated.oval.base.identifier=itau.unibanco.ssi-->
+  <definitions>
+    <definition id="oval:itau.unibanco.ssi:def:1" version="1" class="compliance">
+      <metadata>
+        <title>Checar servico finger</title>
+        <affected family="ios">
+          <platform>*</platform>
+        </affected>
+        <description>Servico finger deve estar desabilitado.</description>
+      </metadata>
+      <criteria operator="AND" comment="" negate="false">
+        <criterion comment="Se achar IP FINGER, nao compliance" test_ref="oval:itau.unibanco.ssi:tst:1" negate="true" />
+      </criteria>
+    </definition>
+  </definitions>
+  <tests>
+    <global_test xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#ios" id="oval:itau.unibanco.ssi:tst:1" version="1" check="all" comment="Default comment, please change" check_existence="at_least_one_exists">
+      <object object_ref="oval:itau.unibanco.ssi:obj:1" />
+    </global_test>
+  </tests>
+  <objects>
+    <global_object xmlns="http://oval.mitre.org/XMLSchema/oval-definitions-5#ios" id="oval:itau.unibanco.ssi:obj:1" version="1" comment="Comando IP Finger">
+      <global_command datatype="string" operation="equals">ip finger</global_command>
+    </global_object>
+  </objects>
+</oval_definitions>
