@@ -57,12 +57,15 @@ class OvalParser:
     def set_filetype(self):
         _def = ' '.join(str(v) for v in self.root.items())
 
-        ios = re.compile('#ios')
-        independent = re.compile('#independent')
-        unix = re.compile('#unix')
+        pattern = re.compile('#(ios|independent|unix)')
+        check = pattern.findall(_def)
 
-        if ios.match(_def):
-            print('ios')
+        if 'independent' and 'ios' in check:
+            self.oval['filetype'] = 'independent'
+        elif 'ios' in check:
+            self.oval['filetype'] = 'ios'
+        elif 'unix' in check:
+            self.oval['filetype'] = 'unix'
 
     def set_namespaces(self):
         self.ns = {
