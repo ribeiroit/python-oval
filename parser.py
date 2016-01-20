@@ -4,6 +4,7 @@
 # desc: Transform OVAL xml files into python dict
 #
 import sys
+import re
 import xml.etree.ElementTree as etree
 import pprint
 
@@ -30,19 +31,19 @@ class OvalParser:
             sys.exit(1)
 
         self.oval = {
+            'filetype': '',
             'generator': {
                 'product_name': '', 'product_version': '',
                 'schema_version': '', 'timestamp': ''
             },
-            'definitions': {
-                'metadata': {
-                    'title': '', 'description': '', 'family': '',
-                    'platform': '',
-                },
-            }
+            'definitions': {},
+            'tests': {},
+            'objects': {},
+            'states': { }
         }
 
         self.root = self.xmL.getroot()
+        self.set_filetype()
         self.set_namespaces()
 
     def get_params(self, items):
@@ -52,6 +53,16 @@ class OvalParser:
                 _params[x] = v
 
         return _params
+
+    def set_filetype(self):
+        _def = ' '.join(str(v) for v in self.root.items())
+
+        ios = re.compile('#ios')
+        independent = re.compile('#independent')
+        unix = re.compile('#unix')
+
+        if ios.match(_def):
+            print('ios')
 
     def set_namespaces(self):
         self.ns = {
@@ -87,9 +98,23 @@ class OvalParser:
     def get_definitions(self):
         for definitions in self.root.findall('oval:definitions', self.ns):
             for definition in definitions.findall('oval:definition', self.ns):
-                self.get_metadata(definition)
+                _params = self.get_params(definition.items())
+                self.oval['definitions'][_params['id']] = self.get_definition(definition)
 
-    def get_metadata(self, definition):
+    def get_definition(self, definition):
+        _def = {'metadata':{}, 'criteria':{}}
+
+        _def['metadata'] = self.get_definition_metadata(definition)
+        #_def['criteria'] = self.get_definition_criterias(definition)
+
+        return _def
+
+    def get_definition_metadata(self, definition):
+        _meta = {
+            'title': '', 'description': '', 'family': '',
+            'platform': '',
+        }
+
         if type(definition) is etree.Element:
             metadata = definition.find('oval:metadata', self.ns)
 
@@ -99,20 +124,45 @@ class OvalParser:
                 affected = metadata.find('oval:affected', self.ns)
 
                 if title is not None:
-                    self.oval['definitions']['metadata']['title'] = title.text
+                    _meta['title'] = title.text
 
                 if desc is not None:
-                    self.oval['definitions']['metadata']['description'] = desc.text
+                    _meta['description'] = desc.text
 
                 if affected is not None:
                     params = self.get_params(affected.items())
                     if 'family' in params.keys():
-                        self.oval['definitions']['metadata']['family'] = params['family']
+                        _meta['family'] = params['family']
 
                     platform = affected.find('oval:platform', self.ns)
 
                     if platform is not None:
-                        self.oval['definitions']['metadata']['platform'] = platform.text
+                        _meta['platform'] = platform.text
+        return _meta
+
+    def get_definition_criterias(self, criteria, test_type):
+        _criteria = {
+            'params': {},
+            'criterion': {'comment': '', 'test_ref': '', 'negate': '',}
+        }
+
+        if type(description) is etree.Element:
+            criteria = definition.find('oval:criteria', self.ns)
+
+            if type(criteria) is etree.Element:
+                _criteria['params'] = self.get_params(criteria.items())
+
+                criterions = criteria.findall('oval:criterion', self.ns)
+
+                if type(criterions) is etree.Element:
+                    for criterion in criterions:
+                        _criteria['criterion'] = self.get_params(
+                            criterion.items())
+                        _id = _criteria['criterion']['test_ref']
+                        self.oval['tests'][_id] = {'type': test_type}
+
+        return _criteria
+
 
 if __name__ == '__main__':
     if len(sys.argv) < 2:
